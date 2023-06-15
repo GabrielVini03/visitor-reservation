@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import visitorreservation.visitorreservationapi.controller.DTO.commons.BaseDTO;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class ReservationDTO {
+public class ReservationDTO extends BaseDTO {
 
     @NotNull(message = "Visitor ID must be provided")
     private UUID visitorId;
