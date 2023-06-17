@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class UpdateVisitorDTO extends BaseDTO {
 
     @Size(max = 128, message = "O nome do visitante deve ter no máximo 128 caracteres")

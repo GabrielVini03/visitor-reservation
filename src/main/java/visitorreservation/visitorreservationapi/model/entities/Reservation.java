@@ -1,13 +1,10 @@
 package visitorreservation.visitorreservationapi.model.entities;
 
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.Id;
 import visitorreservation.visitorreservationapi.model.entities.commons.BaseEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "reservation")

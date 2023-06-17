@@ -1,6 +1,7 @@
 package visitorreservation.visitorreservationapi.model.mappers;
 
 import org.mapstruct.*;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.UpdateVisitorDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.VisitorDTO;
 import visitorreservation.visitorreservationapi.model.entities.Visitor;
 import visitorreservation.visitorreservationapi.model.mappers.commons.IgnoreUnmappedConfig;
@@ -19,5 +20,5 @@ public interface VisitorsMapper {
     Collection<Visitor> mapFromVisitorDTOCollection(Collection<VisitorDTO> source);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateVisitorFromVisitorDTO(VisitorDTO dto, @MappingTarget Visitor entity);
+    void updateVisitorFromVisitorDTO(VisitorDTO visitorDTO, @MappingTarget Visitor visitor);
 }

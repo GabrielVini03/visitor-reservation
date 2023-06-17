@@ -11,14 +11,15 @@ import java.util.Collection;
 public interface ReservationsMapper {
 
 
-    Reservation mapFromReservationDTO(ReservationDTO visitorDTO);
+    Reservation mapFromReservationDTO(ReservationDTO reservationDTO);
 
-    ReservationDTO mapFromReservation(Reservation visitor);
+    ReservationDTO mapFromReservation(Reservation reservationDTO);
 
     Collection<ReservationDTO> mapFromReservationCollection(Collection<Reservation> source);
 
     Collection<Reservation> mapFromReservationDTOCollection(Collection<ReservationDTO> source);
 
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateReservationFromReservationDTO(ReservationDTO dto, @MappingTarget Reservation entity);
+    void updateReservationFromReservationDTO(ReservationDTO reservationDTO, @MappingTarget Reservation reservation);
 }

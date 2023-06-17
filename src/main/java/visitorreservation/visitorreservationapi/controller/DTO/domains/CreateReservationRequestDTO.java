@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -16,13 +17,15 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class UpdateReservationDTO {
+public class CreateReservationRequestDTO {
 
+    @NotEmpty(message = "O id do visitante deve ser informado")
     private UUID visitorId;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @NotEmpty(message = "A data e hora da reserva deve ser informada")
     private LocalDateTime reservationDate;
 }

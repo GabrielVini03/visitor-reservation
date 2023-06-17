@@ -4,6 +4,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import visitorreservation.visitorreservationapi.commons.exceptions.DataNotFoundException;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.CreateVisitorRequestDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.UpdateVisitorDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.VisitorDTO;
 import visitorreservation.visitorreservationapi.model.entities.Visitor;
@@ -35,15 +36,45 @@ public class VisitorsService {
 
         return visitor.get();
     }
-    public VisitorDTO insert(VisitorDTO visitorDTO) throws ConstraintViolationException, DataNotFoundException, ValidationException {
-        Visitor visitor = visitorsRepository.saveAndFlush(visitorsMapper.mapFromVisitorDTO(visitorDTO));
+    public VisitorDTO insert(CreateVisitorRequestDTO createVisitorRequestDTO) throws ConstraintViolationException, DataNotFoundException, ValidationException {
 
+        VisitorDTO visitorDTO = VisitorDTO.builder()
+                .name(createVisitorRequestDTO.getName())
+                .phone(createVisitorRequestDTO.getPhone())
+                .email(createVisitorRequestDTO.getEmail())
+                .build();
+
+        if (visitorsRepository.existsByEmail(visitorDTO.getEmail())) {
+            throw new DataNotFoundException("There is already a visitor with the provided email.");
+        }
+
+        if (visitorsRepository.existsByPhone(visitorDTO.getPhone())) {
+            throw new DataNotFoundException("There is already a visitor with the provided phone number.");
+        }
+
+        Visitor visitor = visitorsRepository.saveAndFlush(visitorsMapper.mapFromVisitorDTO(visitorDTO));
         return visitorsMapper.mapFromVisitor(visitor);
     }
 
-    public VisitorDTO update(UpdateVisitorDTO UpdateVisitorDTO, UUID visitorId) throws DataNotFoundException{
+    public VisitorDTO update(UpdateVisitorDTO updateVisitorDTO, UUID visitorId) throws DataNotFoundException{
 
         Visitor visitor = this.findByVisitor(visitorId);
+
+        VisitorDTO visitorDTO = VisitorDTO.builder()
+                .email(updateVisitorDTO.getEmail())
+                .name(updateVisitorDTO.getName())
+                .phone(updateVisitorDTO.getPhone())
+                .build();
+
+        if (!visitor.getEmail().equals(visitorDTO.getEmail()) && visitorsRepository.existsByEmail(visitorDTO.getEmail())) {
+            throw new DataNotFoundException("There is already a visitor with the provided email.");
+        }
+
+        if (!visitor.getPhone().equals(visitorDTO.getPhone()) && visitorsRepository.existsByPhone(visitorDTO.getPhone())) {
+            throw new DataNotFoundException("There is already a visitor with the provided phone number.");
+        }
+
+        visitorsMapper.updateVisitorFromVisitorDTO(visitorDTO, visitor);
 
         return visitorsMapper.mapFromVisitor(visitorsRepository.saveAndFlush(visitor));
 
