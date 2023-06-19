@@ -1,5 +1,6 @@
 package visitorreservation.visitorreservationapi.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +22,13 @@ import java.util.UUID;
 @RequestMapping("/api/visitors")
 public class VisitorsController implements VisitorControllerInterface {
 
+
     private VisitorsService visitorsService;
 
+    @Autowired
+    public void VisitorsService(VisitorsService visitorsService){
+        this.visitorsService = visitorsService;
+    }
     @Override
     @PostMapping
     public ResponseEntity<VisitorDTO> create(CreateVisitorRequestDTO createVisitorRequestDTO, BindingResult error) throws DataNotFoundException, ValidationException {
