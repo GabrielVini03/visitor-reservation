@@ -5,9 +5,9 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import visitorreservation.visitorreservationapi.commons.exceptions.DataNotFoundException;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.CreateReservationRequestDTO;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.ReservationDTO;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.UpdateReservationDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.CreateReservationRequestDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.ReservationDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.UpdateReservationDTO;
 import visitorreservation.visitorreservationapi.model.entities.Reservation;
 import visitorreservation.visitorreservationapi.model.entities.Visitor;
 import visitorreservation.visitorreservationapi.model.mappers.ReservationsMapper;
@@ -65,7 +65,7 @@ public class ReservationsService {
 
 
         ReservationDTO reservationDTO = ReservationDTO.builder()
-                .visitor(visitorsMapper.mapFromVisitor(visitor.get()))
+                .visitorId(visitor.get().getId())
                 .reservationDate(createdReservationDTO.getReservationDate())
                 .build();
 
@@ -78,7 +78,8 @@ public class ReservationsService {
         Reservation reservation = this.findByReservation(reservationId);
 
         ReservationDTO reservationDTO = ReservationDTO.builder()
-                .visitor(this.visitorsMapper.mapFromVisitor(reservation.getVisitor()))
+                .visitorId(reservation.getVisitor().getId())
+                .reservationDate(reservation.getReservationDate())
                 .build();
 
         if (Objects.nonNull(updateReservationDTO.getVisitorId())) {
@@ -86,7 +87,7 @@ public class ReservationsService {
             Optional<Visitor> visitor = visitorsRepository.findById(updateReservationDTO.getVisitorId());
             if (visitor.isEmpty()) throw new DataNotFoundException("Visitor not found");
 
-            reservationDTO.setVisitor(visitorsMapper.mapFromVisitor(visitor.get()));
+            reservationDTO.setVisitorId(visitor.get().getId());
         }
 
         if (Objects.nonNull(updateReservationDTO.getReservationDate())) {
@@ -100,7 +101,7 @@ public class ReservationsService {
             reservationDTO.setReservationDate(lowerDateTime);
 
             boolean visitorIdIsEquals = Objects.isNull(updateReservationDTO.getVisitorId()) ||
-                    reservationDTO.getVisitor().getId().equals(updateReservationDTO.getVisitorId());
+                    reservationDTO.getVisitorId().equals(updateReservationDTO.getVisitorId());
 
             boolean isTimeAvailable = reservationsRepository.findByReservationDate(upperDateTime, lowerDateTime).isEmpty();
 

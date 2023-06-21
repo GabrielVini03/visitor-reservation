@@ -3,11 +3,12 @@ package visitorreservation.visitorreservationapi.services;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import visitorreservation.visitorreservationapi.commons.exceptions.DataNotFoundException;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.*;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.CreateReservationRequestDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.ReservationDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.UpdateReservationDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.CreateVisitorRequestDTO;
 import visitorreservation.visitorreservationapi.model.services.ReservationsService;
 import visitorreservation.visitorreservationapi.model.services.VisitorsService;
 import visitorreservation.visitorreservationapi.services.commons.DataServiceTests;
@@ -49,7 +50,7 @@ public class ReservationTests extends DataServiceTests {
 
         ReservationDTO reservationDTO = reservationsService.insert(createReservationRequestDTO);
 
-        Assertions.assertEquals(createReservationRequestDTO.getVisitorId(), reservationDTO.getVisitor().getId());
+        Assertions.assertEquals(createReservationRequestDTO.getVisitorId(), reservationDTO.getVisitorId());
         Assertions.assertEquals(createReservationRequestDTO.getReservationDate(), reservationDTO.getReservationDate() );
         Assertions.assertTrue(Objects.nonNull(reservationDTO.getId()));
     }
@@ -77,7 +78,7 @@ public class ReservationTests extends DataServiceTests {
       }
 
     @Test
-    @DisplayName("Can´t update visitor witch email existing in the data base")
+    @DisplayName("Can update only visitor in the data base")
     public void updateOnlyVisitor(){
 
         UUID visitorId = visitorsService.insert(CreateVisitorRequestDTO.builder()
@@ -108,9 +109,9 @@ public class ReservationTests extends DataServiceTests {
         ReservationDTO reservationWitchUpdates = reservationsService.update(updateVisitorDTO, reservationId);
 
         Assertions.assertEquals(reservationWitchUpdates.getReservationDate(), createReservationRequestDTO.getReservationDate());
-        Assertions.assertNotEquals(reservationWitchUpdates.getVisitor().getId(), createReservationRequestDTO.getVisitorId());
+        Assertions.assertNotEquals(reservationWitchUpdates.getVisitorId(), createReservationRequestDTO.getVisitorId());
         Assertions.assertEquals(reservationWitchUpdates.getId(), reservationId);
-        Assertions.assertEquals(reservationWitchUpdates.getVisitor().getId(), updateVisitorDTO.getVisitorId());
+        Assertions.assertEquals(reservationWitchUpdates.getVisitorId(), updateVisitorDTO.getVisitorId());
     }
 
     @Test
@@ -142,7 +143,7 @@ public class ReservationTests extends DataServiceTests {
         ReservationDTO reservationWitchUpdates = reservationsService.update(updateVisitorDTO, reservationId);
 
         Assertions.assertNotEquals(reservationWitchUpdates.getReservationDate(), createReservationRequestDTO.getReservationDate());
-        Assertions.assertEquals(reservationWitchUpdates.getVisitor().getId(), createReservationRequestDTO.getVisitorId());
+        Assertions.assertEquals(reservationWitchUpdates.getVisitorId(), createReservationRequestDTO.getVisitorId());
         Assertions.assertEquals(reservationWitchUpdates.getId(), reservationId);
         Assertions.assertEquals(reservationWitchUpdates.getReservationDate().format(formatter), updateVisitorDTO.getReservationDate().format(formatter));
     }

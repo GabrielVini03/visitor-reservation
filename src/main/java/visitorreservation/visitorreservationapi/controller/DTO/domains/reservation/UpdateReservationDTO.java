@@ -1,4 +1,4 @@
-package visitorreservation.visitorreservationapi.controller.DTO.domains;
+package visitorreservation.visitorreservationapi.controller.DTO.domains.reservation;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

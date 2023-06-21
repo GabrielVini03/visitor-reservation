@@ -19,7 +19,7 @@ public class Reservation extends BaseEntity {
     @Column(name = "reservation_date")
     private LocalDateTime reservationDate;
 
-    @ManyToOne
+    @ManyToOne(cascade={CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER )
     @JoinColumn(name = "visitor_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "visitor_reservation_fk"))
     private Visitor visitor;
 }

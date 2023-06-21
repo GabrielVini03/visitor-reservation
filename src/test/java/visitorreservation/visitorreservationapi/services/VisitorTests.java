@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import visitorreservation.visitorreservationapi.commons.exceptions.DataNotFoundException;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.CreateVisitorRequestDTO;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.UpdateVisitorDTO;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.VisitorDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.CreateVisitorRequestDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.UpdateVisitorDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.VisitorDTO;
 import visitorreservation.visitorreservationapi.model.services.VisitorsService;
 import visitorreservation.visitorreservationapi.services.commons.DataServiceTests;
 
@@ -142,7 +142,7 @@ public class VisitorTests extends DataServiceTests {
 
     }
     @Test
-    @DisplayName("Can´t update visitor witch email existing in the data base")
+    @DisplayName("Can´t update visitor with email existing in the data base")
     public void updateSameEmail(){
 
         CreateVisitorRequestDTO createVisitorRequestDTO = CreateVisitorRequestDTO.builder()
@@ -170,7 +170,7 @@ public class VisitorTests extends DataServiceTests {
     }
 
     @Test
-    @DisplayName("Can´t update visitor witch phone existing in the data base")
+    @DisplayName("Can´t update visitor with phone existing in the data base")
     public void updateSamePhone(){
 
         CreateVisitorRequestDTO createVisitorRequestDTO = CreateVisitorRequestDTO.builder()

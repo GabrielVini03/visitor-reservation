@@ -4,8 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import visitorreservation.visitorreservationapi.commons.exceptions.DataNotFoundException;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.CreateReservationRequestDTO;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.ReservationDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.CreateReservationRequestDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.ReservationDTO;
 
 
 import javax.validation.Valid;

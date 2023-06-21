@@ -1,8 +1,7 @@
 package visitorreservation.visitorreservationapi.model.mappers;
 
 import org.mapstruct.*;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.UpdateVisitorDTO;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.VisitorDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.VisitorDTO;
 import visitorreservation.visitorreservationapi.model.entities.Visitor;
 import visitorreservation.visitorreservationapi.model.mappers.commons.IgnoreUnmappedConfig;
 

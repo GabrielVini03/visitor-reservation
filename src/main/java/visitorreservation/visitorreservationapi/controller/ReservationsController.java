@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
 import visitorreservation.visitorreservationapi.commons.exceptions.DataNotFoundException;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.CreateReservationRequestDTO;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.ReservationDTO;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.UpdateReservationDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.CreateReservationRequestDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.ReservationDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.UpdateReservationDTO;
 import visitorreservation.visitorreservationapi.controller.resources.interfaces.reservation.ReservationControllerInterface;
 import visitorreservation.visitorreservationapi.model.services.ReservationsService;
 
@@ -42,7 +42,7 @@ public class ReservationsController implements ReservationControllerInterface {
 
     @Override
     @PutMapping("/{reservationId}")
-    public ResponseEntity<ReservationDTO> update(UUID reservationId, BindingResult error, UpdateReservationDTO updateReservationDTO) throws ValidationException, DataNotFoundException {
+    public ResponseEntity<ReservationDTO> update(UpdateReservationDTO updateReservationDTO, UUID reservationId, BindingResult error) throws ValidationException, DataNotFoundException {
         if (error.hasErrors()) {
             throw new ValidationException(Objects.nonNull(error.getFieldError()) ? error.getFieldError().getDefaultMessage() : "Validation error");
         }
@@ -74,6 +74,7 @@ public class ReservationsController implements ReservationControllerInterface {
 
         return ResponseEntity.ok().body(reservationDTOS);
     }
+
 }
 
 

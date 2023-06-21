@@ -3,7 +3,7 @@ package visitorreservation.visitorreservationapi.controller.resources.interfaces
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import visitorreservation.visitorreservationapi.commons.exceptions.DataNotFoundException;
-import visitorreservation.visitorreservationapi.controller.DTO.domains.VisitorDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.VisitorDTO;
 import java.util.UUID;
 
 public interface FindVisitorResourceInterface {
