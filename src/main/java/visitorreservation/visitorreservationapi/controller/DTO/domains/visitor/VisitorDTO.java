@@ -1,4 +1,4 @@
-package visitorreservation.visitorreservationapi.controller.DTO.domains;
+package visitorreservation.visitorreservationapi.controller.DTO.domains.visitor;
 
 import lombok.*;
 import visitorreservation.visitorreservationapi.controller.DTO.commons.BaseDTO;
@@ -6,6 +6,7 @@ import visitorreservation.visitorreservationapi.controller.DTO.commons.BaseDTO;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.UUID;
 
 
 @AllArgsConstructor
@@ -13,7 +14,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @Builder
-public class VisitorDTO extends BaseDTO {
+public class VisitorDTO extends BaseDTO<UUID> {
 
     @NotEmpty(message = "O nome do visitante deve ser informado")
     @Size(max = 128, message = "O nome do visitante deve ter no máximo 128 caracteres")
