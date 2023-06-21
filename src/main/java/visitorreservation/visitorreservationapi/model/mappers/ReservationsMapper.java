@@ -10,7 +10,7 @@ import java.util.Collection;
 @Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true), config = IgnoreUnmappedConfig.class)
 public interface ReservationsMapper {
 
-    @Mapping(source = "visitorId", target = "visitor.id")
+    @InheritConfiguration
     Reservation mapFromReservationDTO(ReservationDTO reservationDTO);
 
     @InheritInverseConfiguration(name = "mapFromReservationDTO")

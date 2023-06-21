@@ -50,7 +50,7 @@ public class ReservationTests extends DataServiceTests {
 
         ReservationDTO reservationDTO = reservationsService.insert(createReservationRequestDTO);
 
-        Assertions.assertEquals(createReservationRequestDTO.getVisitorId(), reservationDTO.getVisitorId());
+        Assertions.assertEquals(createReservationRequestDTO.getVisitorId(), reservationDTO.getVisitor().getId());
         Assertions.assertEquals(createReservationRequestDTO.getReservationDate(), reservationDTO.getReservationDate() );
         Assertions.assertTrue(Objects.nonNull(reservationDTO.getId()));
     }
@@ -109,9 +109,9 @@ public class ReservationTests extends DataServiceTests {
         ReservationDTO reservationWitchUpdates = reservationsService.update(updateVisitorDTO, reservationId);
 
         Assertions.assertEquals(reservationWitchUpdates.getReservationDate(), createReservationRequestDTO.getReservationDate());
-        Assertions.assertNotEquals(reservationWitchUpdates.getVisitorId(), createReservationRequestDTO.getVisitorId());
+        Assertions.assertNotEquals(reservationWitchUpdates.getVisitor().getId(), createReservationRequestDTO.getVisitorId());
         Assertions.assertEquals(reservationWitchUpdates.getId(), reservationId);
-        Assertions.assertEquals(reservationWitchUpdates.getVisitorId(), updateVisitorDTO.getVisitorId());
+        Assertions.assertEquals(reservationWitchUpdates.getVisitor().getId(), updateVisitorDTO.getVisitorId());
     }
 
     @Test
@@ -143,7 +143,7 @@ public class ReservationTests extends DataServiceTests {
         ReservationDTO reservationWitchUpdates = reservationsService.update(updateVisitorDTO, reservationId);
 
         Assertions.assertNotEquals(reservationWitchUpdates.getReservationDate(), createReservationRequestDTO.getReservationDate());
-        Assertions.assertEquals(reservationWitchUpdates.getVisitorId(), createReservationRequestDTO.getVisitorId());
+        Assertions.assertEquals(reservationWitchUpdates.getVisitor().getId(), createReservationRequestDTO.getVisitorId());
         Assertions.assertEquals(reservationWitchUpdates.getId(), reservationId);
         Assertions.assertEquals(reservationWitchUpdates.getReservationDate().format(formatter), updateVisitorDTO.getReservationDate().format(formatter));
     }

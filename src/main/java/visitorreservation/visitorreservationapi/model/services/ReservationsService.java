@@ -15,6 +15,7 @@ import visitorreservation.visitorreservationapi.model.mappers.VisitorsMapper;
 import visitorreservation.visitorreservationapi.model.repositories.ReservationsRepository;
 import visitorreservation.visitorreservationapi.model.repositories.VisitorsRepository;
 
+import javax.transaction.Transactional;
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -65,7 +66,7 @@ public class ReservationsService {
 
 
         ReservationDTO reservationDTO = ReservationDTO.builder()
-                .visitorId(visitor.get().getId())
+                .visitor(visitorsMapper.mapFromVisitor(visitor.get()))
                 .reservationDate(createdReservationDTO.getReservationDate())
                 .build();
 
@@ -73,12 +74,13 @@ public class ReservationsService {
         return reservationsMapper.mapFromReservation(reservation);
     }
 
+    @Transactional
     public ReservationDTO update(UpdateReservationDTO updateReservationDTO, UUID reservationId) throws DataNotFoundException {
 
         Reservation reservation = this.findByReservation(reservationId);
 
         ReservationDTO reservationDTO = ReservationDTO.builder()
-                .visitorId(reservation.getVisitor().getId())
+                .visitor(visitorsMapper.mapFromVisitor(reservation.getVisitor()))
                 .reservationDate(reservation.getReservationDate())
                 .build();
 
@@ -87,7 +89,7 @@ public class ReservationsService {
             Optional<Visitor> visitor = visitorsRepository.findById(updateReservationDTO.getVisitorId());
             if (visitor.isEmpty()) throw new DataNotFoundException("Visitor not found");
 
-            reservationDTO.setVisitorId(visitor.get().getId());
+            reservationDTO.setVisitor(visitorsMapper.mapFromVisitor(visitor.get()));
         }
 
         if (Objects.nonNull(updateReservationDTO.getReservationDate())) {
@@ -101,7 +103,7 @@ public class ReservationsService {
             reservationDTO.setReservationDate(lowerDateTime);
 
             boolean visitorIdIsEquals = Objects.isNull(updateReservationDTO.getVisitorId()) ||
-                    reservationDTO.getVisitorId().equals(updateReservationDTO.getVisitorId());
+                    reservationDTO.getVisitor().getId().equals(updateReservationDTO.getVisitorId());
 
             boolean isTimeAvailable = reservationsRepository.findByReservationDate(upperDateTime, lowerDateTime).isEmpty();
 
@@ -112,9 +114,14 @@ public class ReservationsService {
             }
         }
 
-        reservationsMapper.updateReservationFromReservationDTO(reservationDTO, reservation);
 
-        return reservationsMapper.mapFromReservation(reservationsRepository.saveAndFlush(reservation));
+        var r = Reservation.builder()
+                .visitor(visitorsMapper.mapFromVisitorDTO(reservationDTO.getVisitor()))
+                .reservationDate(reservationDTO.getReservationDate())
+                .build();
+        r.setId(reservationId);
+
+        return reservationsMapper.mapFromReservation(reservationsRepository.saveAndFlush(r));
 
     }
 

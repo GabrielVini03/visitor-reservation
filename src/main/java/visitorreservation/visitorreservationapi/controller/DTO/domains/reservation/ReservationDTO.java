@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import visitorreservation.visitorreservationapi.controller.DTO.commons.BaseDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.VisitorDTO;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ import java.util.UUID;
 public class ReservationDTO extends BaseDTO<UUID> {
 
     @NotNull(message = "O id do visitante deve ser informado")
-    private UUID visitorId;
+    private VisitorDTO visitor;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
