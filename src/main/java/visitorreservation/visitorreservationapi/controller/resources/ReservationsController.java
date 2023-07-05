@@ -1,4 +1,4 @@
-package visitorreservation.visitorreservationapi.controller;
+package visitorreservation.visitorreservationapi.controller.resources;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

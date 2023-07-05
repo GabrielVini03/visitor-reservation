@@ -1,10 +1,13 @@
 package visitorreservation.visitorreservationapi.model.services;
 
-import lombok.extern.log4j.Log4j2;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import visitorreservation.visitorreservationapi.commons.exceptions.DataNotFoundException;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.CreateReservationRequestDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.ReservationDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.CreateVisitorRequestDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.VisitorDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitorReservation.CreateRequestVisitorReservationDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitorReservation.UpdateVisitorReservationDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitorReservation.VisitorReservationDTO;
@@ -19,7 +22,6 @@ import visitorreservation.visitorreservationapi.model.repositories.VisitorReserv
 import visitorreservation.visitorreservationapi.model.repositories.VisitorsRepository;
 
 import javax.validation.ValidationException;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,6 +33,10 @@ public class VisitorReservationsService {
     private final VisitorsRepository visitorsRepository;
     private final ReservationsRepository reservationsRepository;
 
+    private final VisitorsService visitorsService;
+
+    private final ReservationsService reservationsService;
+
     private final VisitorsMapper visitorsMapper;
 
     private final ReservationsMapper reservationsMapper;
@@ -39,13 +45,15 @@ public class VisitorReservationsService {
     public VisitorReservationsService(VisitorReservationsRepository visitorReservationsRepository,
                                      VisitorReservationsMapper visitorReservationsMapper,
                                      VisitorsRepository visitorsRepository,
-                                     ReservationsRepository reservationsRepository, VisitorsMapper visitorsMapper, ReservationsMapper reservationsMapper) {
+                                     ReservationsRepository reservationsRepository, VisitorsMapper visitorsMapper, ReservationsMapper reservationsMapper, ReservationsService reservationsService, VisitorsService visitorsService) {
         this.visitorReservationsRepository = visitorReservationsRepository;
         this.visitorReservationsMapper = visitorReservationsMapper;
         this.visitorsRepository = visitorsRepository;
         this.reservationsRepository = reservationsRepository;
         this.visitorsMapper = visitorsMapper;
         this.reservationsMapper = reservationsMapper;
+        this.visitorsService = visitorsService;
+        this.reservationsService = reservationsService;
     }
 
     public VisitorReservation findByVisitorReservation(UUID visitorReservationId) {
@@ -58,25 +66,25 @@ public class VisitorReservationsService {
 
 
     public VisitorReservationDTO insert(CreateRequestVisitorReservationDTO createVisitorReservationDTO) throws ConstraintViolationException, DataNotFoundException, ValidationException {
-        Optional<Visitor> visitor = visitorsRepository.findById(createVisitorReservationDTO.getVisitorId());
-        Optional<Reservation> reservation = reservationsRepository.findById(createVisitorReservationDTO.getReservationId());
+        VisitorDTO visitorDTO = visitorsService.insert(
+                CreateVisitorRequestDTO.builder()
+                        .name(createVisitorReservationDTO.getVisitorName())
+                        .email(createVisitorReservationDTO.getVisitorEmail())
+                        .phone(createVisitorReservationDTO.getVisitorPhone())
+                        .build()
+        );
 
-        if (visitor.isEmpty()) {
-            throw new DataNotFoundException("Visitor not found for ID: " + createVisitorReservationDTO.getVisitorId());
-        }
+        ReservationDTO reservationDTO = reservationsService.insert(
+                CreateReservationRequestDTO.builder()
+                        .visitorId(visitorDTO.getId())
+                        .reservationDate(createVisitorReservationDTO.getReservationDate())
+                        .build()
+        );
 
-        if (reservation.isEmpty()) {
-            throw new DataNotFoundException("Reservation not found for ID: " + createVisitorReservationDTO.getReservationId());
-        }
-
-        VisitorReservationDTO visitorReservationDTO =  VisitorReservationDTO.builder()
-                .reservationId(reservation.get().getId())
-                .visitorId(visitor.get().getId())
+        return VisitorReservationDTO.builder()
+                .visitorId(visitorDTO.getId())
+                .reservationId(reservationDTO.getId())
                 .build();
-
-        VisitorReservation visitorReservation = visitorReservationsRepository.saveAndFlush(visitorReservationsMapper.mapFromVisitorReservationDTO(visitorReservationDTO));
-        return visitorReservationsMapper.mapFromVisitorReservation(visitorReservation);
-
     }
 
     public VisitorReservationDTO update(UpdateVisitorReservationDTO updateVisitorReservationDTO, UUID visitorReservationId) throws DataNotFoundException  {
@@ -93,23 +101,12 @@ public class VisitorReservationsService {
 
     }
 
-    public VisitorReservationDTO find(UUID visitorReservationId) throws  DataNotFoundException {
-        VisitorReservation visitorReservation = findByVisitorReservation(visitorReservationId);
-        return visitorReservationsMapper.mapFromVisitorReservation(visitorReservation);
-    }
+    public void delete(UUID reservationId) throws DataNotFoundException {
 
-    public Collection<VisitorReservationDTO> list() {
-        Collection<VisitorReservation> visitorReservations = visitorReservationsRepository.findAll();
-        return visitorReservationsMapper.mapFromVisitorReservationCollection(visitorReservations);
-    }
+      ReservationDTO reservationDTO = reservationsService.find(reservationId);
 
-    public boolean delete(UUID visitorReservationId) throws DataNotFoundException {
-        if (visitorReservationsRepository.existsById(visitorReservationId))  {
-            visitorReservationsRepository.deleteById(visitorReservationId);
-            return true;
-        }
-        throw new DataNotFoundException("Visitor Reservation not found");
+        reservationsService.delete(reservationDTO.getId());
+        visitorsService.delete(reservationDTO.getVisitor().getId());
     }
-
 
 }

@@ -2,8 +2,9 @@ package visitorreservation.visitorreservationapi.controller.DTO.domains.visitorR
 
 import lombok.*;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,10 +13,16 @@ import java.util.UUID;
 @Builder
 public class CreateRequestVisitorReservationDTO {
 
-        @NotNull(message = "O id do visitante deve ser informado")
-        private UUID visitorId;
+        @NotEmpty( message = "O nome do visitante deve ser iformado")
+        private String visitorName;
 
-        @NotNull(message = "O id da reserva deve ser informado")
-        private UUID reservationId;
+        @NotEmpty( message = "O email do visitante deve ser iformado")
+        private String visitorEmail;
+
+        @NotEmpty(message = "O telefone do visitante deve ser informado")
+        private String visitorPhone;
+
+        @NotNull(message = "A data e hora da reserva deve ser informada")
+        private LocalDateTime reservationDate;
 
 }
