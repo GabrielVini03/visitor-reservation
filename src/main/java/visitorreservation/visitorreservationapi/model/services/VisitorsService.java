@@ -4,10 +4,12 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import visitorreservation.visitorreservationapi.commons.exceptions.DataNotFoundException;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.ReservationDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.CreateVisitorRequestDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.UpdateVisitorDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.VisitorDTO;
 import visitorreservation.visitorreservationapi.model.entities.Visitor;
+import visitorreservation.visitorreservationapi.model.mappers.ReservationsMapper;
 import visitorreservation.visitorreservationapi.model.mappers.VisitorsMapper;
 import visitorreservation.visitorreservationapi.model.repositories.VisitorsRepository;
 
@@ -23,10 +25,13 @@ public class VisitorsService {
 
     VisitorsMapper visitorsMapper;
 
+    ReservationsMapper reservationsMapper;
+
     @Autowired
-    public void VisitorsService(VisitorsRepository visitorsRepository, VisitorsMapper visitorsMapper){
+    public void VisitorsService(VisitorsRepository visitorsRepository, VisitorsMapper visitorsMapper, ReservationsMapper reservationsMapper){
         this.visitorsMapper = visitorsMapper;
         this.visitorsRepository = visitorsRepository;
+        this.reservationsMapper = reservationsMapper;
     }
 
     public Visitor findByVisitor(UUID visitorId){
@@ -95,6 +100,7 @@ public class VisitorsService {
 
       return true;
     }
+
 }
 
 

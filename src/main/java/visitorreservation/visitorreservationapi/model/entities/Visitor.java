@@ -3,9 +3,9 @@ package visitorreservation.visitorreservationapi.model.entities;
 import lombok.*;
 import visitorreservation.visitorreservationapi.model.entities.commons.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Collection;
+
 @Entity
 @Table(name = "visitor")
 @AllArgsConstructor
@@ -24,4 +24,5 @@ public class Visitor extends BaseEntity{
 
     @Column(name = "phone")
     private String phone;
+
 }

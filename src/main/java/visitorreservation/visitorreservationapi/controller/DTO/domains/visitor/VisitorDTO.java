@@ -2,10 +2,12 @@ package visitorreservation.visitorreservationapi.controller.DTO.domains.visitor;
 
 import lombok.*;
 import visitorreservation.visitorreservationapi.controller.DTO.commons.BaseDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.ReservationDTO;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.Collection;
 import java.util.UUID;
 
 
@@ -28,5 +30,7 @@ public class VisitorDTO extends BaseDTO<UUID> {
     @NotEmpty(message = "O telefone do visitante deve ser informado")
     @Size(max = 20, message = "O telefone do visitante deve ter no máximo 20 caracteres")
     private String phone;
+
+    private Collection<ReservationDTO> reservations;
 
 }

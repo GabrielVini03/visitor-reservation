@@ -37,12 +37,6 @@ public class VisitorTests extends DataServiceTests {
 
         VisitorDTO visitorInserted = visitorsService.insert(visitor);
 
-        Logger logger = LoggerFactory.getLogger(VisitorTests.class);
-        logger.info("-------------------------- ID do visitante inserido: {} -----------------------", visitorInserted.getId());
-
-
-
-
         Assertions.assertEquals(visitorInserted.getEmail(), visitor.getEmail());
         Assertions.assertEquals(visitorInserted.getPhone(), visitor.getPhone());
         Assertions.assertEquals(visitorInserted.getName(), visitor.getName());
