@@ -11,27 +11,19 @@ import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.V
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitorReservation.CreateRequestVisitorReservationDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitorReservation.UpdateVisitorReservationDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitorReservation.VisitorReservationDTO;
-import visitorreservation.visitorreservationapi.model.entities.Reservation;
-import visitorreservation.visitorreservationapi.model.entities.Visitor;
-import visitorreservation.visitorreservationapi.model.entities.VisitorReservation;
 import visitorreservation.visitorreservationapi.model.mappers.ReservationsMapper;
-import visitorreservation.visitorreservationapi.model.mappers.VisitorReservationsMapper;
 import visitorreservation.visitorreservationapi.model.mappers.VisitorsMapper;
 import visitorreservation.visitorreservationapi.model.repositories.ReservationsRepository;
-import visitorreservation.visitorreservationapi.model.repositories.VisitorReservationsRepository;
 import visitorreservation.visitorreservationapi.model.repositories.VisitorsRepository;
 
 import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class VisitorReservationsService {
 
-    private final VisitorReservationsRepository visitorReservationsRepository;
-    private final VisitorReservationsMapper visitorReservationsMapper;
     private final VisitorsRepository visitorsRepository;
     private final ReservationsRepository reservationsRepository;
 
@@ -44,12 +36,8 @@ public class VisitorReservationsService {
     private final ReservationsMapper reservationsMapper;
 
     @Autowired
-    public VisitorReservationsService(VisitorReservationsRepository visitorReservationsRepository,
-                                     VisitorReservationsMapper visitorReservationsMapper,
-                                     VisitorsRepository visitorsRepository,
+    public VisitorReservationsService(VisitorsRepository visitorsRepository,
                                      ReservationsRepository reservationsRepository, VisitorsMapper visitorsMapper, ReservationsMapper reservationsMapper, ReservationsService reservationsService, VisitorsService visitorsService) {
-        this.visitorReservationsRepository = visitorReservationsRepository;
-        this.visitorReservationsMapper = visitorReservationsMapper;
         this.visitorsRepository = visitorsRepository;
         this.reservationsRepository = reservationsRepository;
         this.visitorsMapper = visitorsMapper;
@@ -57,15 +45,6 @@ public class VisitorReservationsService {
         this.visitorsService = visitorsService;
         this.reservationsService = reservationsService;
     }
-
-    public VisitorReservation findByVisitorReservation(UUID visitorReservationId) {
-        Optional<VisitorReservation> visitorReservation = visitorReservationsRepository.findById(visitorReservationId);
-
-        if (visitorReservation.isEmpty()) throw new DataNotFoundException();
-
-        return visitorReservation.get();
-    }
-
 
     public VisitorReservationDTO insert(CreateRequestVisitorReservationDTO createVisitorReservationDTO) throws ConstraintViolationException, DataNotFoundException, ValidationException {
         VisitorDTO visitorDTO = visitorsService.insert(
@@ -93,16 +72,9 @@ public class VisitorReservationsService {
     }
 
     public VisitorReservationDTO update(UpdateVisitorReservationDTO updateVisitorReservationDTO, UUID visitorReservationId) throws DataNotFoundException  {
-        VisitorReservation visitorReservation = findByVisitorReservation(visitorReservationId);
 
-        Optional<Visitor> visitor = visitorsRepository.findById(updateVisitorReservationDTO.getVisitorID());
-        Optional<Reservation> reservation = reservationsRepository.findById(updateVisitorReservationDTO.getVisitorID());
 
-        visitorReservation.setVisitor(visitor.orElseThrow(() -> new DataNotFoundException("Visitor not found")));
-        visitorReservation.setReservation(reservation.orElseThrow(() -> new DataNotFoundException("Reservation not found")));
-
-        VisitorReservation updatedVisitorReservation = visitorReservationsRepository.save(visitorReservation);
-        return visitorReservationsMapper.mapFromVisitorReservation(updatedVisitorReservation);
+        return null;
 
     }
 

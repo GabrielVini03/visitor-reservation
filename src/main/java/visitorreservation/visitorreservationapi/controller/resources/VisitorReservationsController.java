@@ -40,7 +40,7 @@ public class VisitorReservationsController implements VisitorReservationControll
     }
 
     @Override
-    @DeleteMapping("/{visitorReservationId}")
+    @DeleteMapping("/{reservationId}")
     public ResponseEntity<String> delete(@PathVariable UUID reservationId) throws DataNotFoundException {
         visitorReservationsService.delete(reservationId);
         return ResponseEntity.ok("Visitor reservation deleted successfully.");
