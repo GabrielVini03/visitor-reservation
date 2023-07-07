@@ -5,7 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.UUID;
+
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,9 +15,13 @@ import java.util.UUID;
 @Builder
 public class UpdateVisitorReservationDTO {
 
-    private UUID reservationId;
+    private String visitorName;
 
-    private UUID visitorID;
+    private String visitorEmail;
+
+    private String visitorPhone;
+
+    private LocalDateTime reservationDate;
 
 }
 

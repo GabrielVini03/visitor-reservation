@@ -1,12 +1,12 @@
 package visitorreservation.visitorreservationapi.controller.resources;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import visitorreservation.visitorreservationapi.commons.exceptions.DataNotFoundException;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitorReservation.CreateRequestVisitorReservationDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.visitorReservation.UpdateVisitorReservationDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitorReservation.VisitorReservationDTO;
 import visitorreservation.visitorreservationapi.controller.resources.interfaces.visitorReservation.VisitorReservationControllerInterface;
 import visitorreservation.visitorreservationapi.model.services.VisitorReservationsService;
@@ -58,5 +58,13 @@ public class VisitorReservationsController implements VisitorReservationControll
 
         VisitorReservationDTO visitorReservationDTO = visitorReservationsService.find(reservationId);
         return ResponseEntity.ok().body(visitorReservationDTO);
+    }
+
+    @Override
+    @PutMapping("/{reservationId}")
+    public ResponseEntity<VisitorReservationDTO> update(UpdateVisitorReservationDTO updateVisitorReservationDTO, UUID reservationId, BindingResult error) throws ValidationException, DataNotFoundException {
+
+        VisitorReservationDTO visitorReservationDTO = visitorReservationsService.update(reservationId, updateVisitorReservationDTO);
+        return ResponseEntity.ok(visitorReservationDTO);
     }
 }

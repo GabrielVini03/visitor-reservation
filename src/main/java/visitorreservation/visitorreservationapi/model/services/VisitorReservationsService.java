@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import visitorreservation.visitorreservationapi.commons.exceptions.DataNotFoundException;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.CreateReservationRequestDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.ReservationDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.reservation.UpdateReservationDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.CreateVisitorRequestDTO;
+import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.UpdateVisitorDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitor.VisitorDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitorReservation.CreateRequestVisitorReservationDTO;
 import visitorreservation.visitorreservationapi.controller.DTO.domains.visitorReservation.UpdateVisitorReservationDTO;
@@ -24,24 +26,13 @@ import java.util.UUID;
 @Service
 public class VisitorReservationsService {
 
-    private final VisitorsRepository visitorsRepository;
-    private final ReservationsRepository reservationsRepository;
 
     private final VisitorsService visitorsService;
 
     private final ReservationsService reservationsService;
 
-    private final VisitorsMapper visitorsMapper;
-
-    private final ReservationsMapper reservationsMapper;
-
     @Autowired
-    public VisitorReservationsService(VisitorsRepository visitorsRepository,
-                                     ReservationsRepository reservationsRepository, VisitorsMapper visitorsMapper, ReservationsMapper reservationsMapper, ReservationsService reservationsService, VisitorsService visitorsService) {
-        this.visitorsRepository = visitorsRepository;
-        this.reservationsRepository = reservationsRepository;
-        this.visitorsMapper = visitorsMapper;
-        this.reservationsMapper = reservationsMapper;
+    public VisitorReservationsService(ReservationsService reservationsService, VisitorsService visitorsService) {
         this.visitorsService = visitorsService;
         this.reservationsService = reservationsService;
     }
@@ -71,12 +62,32 @@ public class VisitorReservationsService {
                 .build();
     }
 
-    public VisitorReservationDTO update(UpdateVisitorReservationDTO updateVisitorReservationDTO, UUID visitorReservationId) throws DataNotFoundException  {
+    public VisitorReservationDTO update(UUID visitorReservationId, UpdateVisitorReservationDTO updateVisitorReservationDTO) throws DataNotFoundException, ValidationException {
+        ReservationDTO reservationDTO = reservationsService.find(visitorReservationId);
 
+        VisitorDTO visitorDTOUpdated = visitorsService.update(
+                UpdateVisitorDTO.builder()
+                        .name(updateVisitorReservationDTO.getVisitorName())
+                        .email(updateVisitorReservationDTO.getVisitorEmail())
+                        .phone(updateVisitorReservationDTO.getVisitorPhone())
+                        .build() , reservationDTO.getVisitor().getId()
+        );
 
-        return null;
+        ReservationDTO reservationDTOUpdated = reservationsService.update(
+                UpdateReservationDTO.builder()
+                        .reservationDate(updateVisitorReservationDTO.getReservationDate())
+                        .build(), reservationDTO.getId()
+        );
 
+        return VisitorReservationDTO.builder()
+                .id(reservationDTO.getId())
+                .visitorName(visitorDTOUpdated.getName())
+                .visitorEmail(visitorDTOUpdated.getEmail())
+                .visitorPhone(visitorDTOUpdated.getPhone())
+                .reservationDate(reservationDTOUpdated.getReservationDate())
+                .build();
     }
+
 
     public VisitorReservationDTO find(UUID reservationId) throws DataNotFoundException {
         ReservationDTO reservationDTO = reservationsService.find(reservationId);
