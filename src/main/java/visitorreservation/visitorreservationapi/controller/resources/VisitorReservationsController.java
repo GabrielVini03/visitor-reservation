@@ -12,6 +12,7 @@ import visitorreservation.visitorreservationapi.controller.resources.interfaces.
 import visitorreservation.visitorreservationapi.model.services.VisitorReservationsService;
 
 import javax.validation.ValidationException;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -40,8 +41,22 @@ public class VisitorReservationsController implements VisitorReservationControll
 
     @Override
     @DeleteMapping("/{visitorReservationId}")
-    public ResponseEntity<String> delete(@PathVariable UUID visitorReservationId) throws DataNotFoundException {
-        visitorReservationsService.delete(visitorReservationId);
+    public ResponseEntity<String> delete(@PathVariable UUID reservationId) throws DataNotFoundException {
+        visitorReservationsService.delete(reservationId);
         return ResponseEntity.ok("Visitor reservation deleted successfully.");
+    }
+
+    @GetMapping
+    public ResponseEntity<Collection<VisitorReservationDTO>> list() {
+        Collection<VisitorReservationDTO> visitorReservationDTOs = visitorReservationsService.list();
+
+        return ResponseEntity.ok().body(visitorReservationDTOs);
+    }
+
+    @GetMapping("/{reservationId}")
+    public ResponseEntity<VisitorReservationDTO> find(UUID reservationId) throws DataNotFoundException {
+
+        VisitorReservationDTO visitorReservationDTO = visitorReservationsService.find(reservationId);
+        return ResponseEntity.ok().body(visitorReservationDTO);
     }
 }

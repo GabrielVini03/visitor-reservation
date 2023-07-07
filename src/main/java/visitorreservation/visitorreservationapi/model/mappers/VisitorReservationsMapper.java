@@ -12,17 +12,9 @@ import java.util.Collection;
 public interface VisitorReservationsMapper {
 
     @InheritInverseConfiguration(name = "mapFromVisitorReservationDTO")
-    @Mappings({
-            @Mapping(target = "visitorId", source = "visitor.id"),
-            @Mapping(target = "reservationId", source = "reservation.id")
-    })
     VisitorReservationDTO mapFromVisitorReservation(VisitorReservation visitorReservation);
 
     @InheritConfiguration
-    @Mappings({
-            @Mapping(target = "visitor.id", source = "visitorId"),
-            @Mapping(target = "reservation.id", source = "reservationId")
-    })
     VisitorReservation mapFromVisitorReservationDTO(VisitorReservationDTO visitorReservationDTO);
 
     Collection<VisitorReservationDTO> mapFromVisitorReservationCollection(Collection<VisitorReservation> visitorReservations);

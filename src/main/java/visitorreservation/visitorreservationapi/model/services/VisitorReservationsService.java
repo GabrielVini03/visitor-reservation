@@ -22,6 +22,8 @@ import visitorreservation.visitorreservationapi.model.repositories.VisitorReserv
 import visitorreservation.visitorreservationapi.model.repositories.VisitorsRepository;
 
 import javax.validation.ValidationException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -82,8 +84,11 @@ public class VisitorReservationsService {
         );
 
         return VisitorReservationDTO.builder()
-                .visitorId(visitorDTO.getId())
-                .reservationId(reservationDTO.getId())
+                .id(reservationDTO.getId())
+                .visitorName(visitorDTO.getName())
+                .visitorEmail(visitorDTO.getEmail())
+                .visitorPhone(visitorDTO.getPhone())
+                .reservationDate(reservationDTO.getReservationDate())
                 .build();
     }
 
@@ -100,6 +105,43 @@ public class VisitorReservationsService {
         return visitorReservationsMapper.mapFromVisitorReservation(updatedVisitorReservation);
 
     }
+
+    public VisitorReservationDTO find(UUID reservationId) throws DataNotFoundException {
+        ReservationDTO reservationDTO = reservationsService.find(reservationId);
+        VisitorDTO visitorDTO = visitorsService.find(reservationDTO.getVisitor().getId());
+
+        return VisitorReservationDTO.builder()
+                .id(reservationId)
+                .visitorName(visitorDTO.getName())
+                .visitorEmail(visitorDTO.getEmail())
+                .visitorPhone(visitorDTO.getPhone())
+                .reservationDate(reservationDTO.getReservationDate())
+                .build();
+    }
+
+
+    public Collection<VisitorReservationDTO> list() {
+        Collection<ReservationDTO> reservationDTOCollection = reservationsService.list();
+
+        Collection<VisitorReservationDTO> visitorReservationDTOCollection = new ArrayList<>();
+
+        for (ReservationDTO reservationDTO : reservationDTOCollection) {
+            VisitorDTO visitorDTO = visitorsService.find(reservationDTO.getVisitor().getId());
+
+            VisitorReservationDTO visitorReservationDTO = VisitorReservationDTO.builder()
+                    .id(reservationDTO.getId())
+                    .visitorName(visitorDTO.getName())
+                    .visitorEmail(visitorDTO.getEmail())
+                    .visitorPhone(visitorDTO.getPhone())
+                    .reservationDate(reservationDTO.getReservationDate())
+                    .build();
+
+            visitorReservationDTOCollection.add(visitorReservationDTO);
+        }
+
+        return visitorReservationDTOCollection;
+    }
+
 
     public void delete(UUID reservationId) throws DataNotFoundException {
 
